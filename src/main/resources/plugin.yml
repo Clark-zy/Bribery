@@ -1,0 +1,23 @@
+name: BriberyMoney
+version: '1.0-SNAPSHOT'
+main: org.clark.BriberyMoney
+api-version: '1.21'
+authors: [ Provias ]
+commands:
+  bm:
+    description: 发送点券红包
+    usage: /<command> <红包个数> <总点券数>
+    permission: briberymoney.send
+    permission-message: 你没有权限使用此指令！
+  briberymoney:
+    description: 抢红包指令（内部使用）
+    usage: /<command> grab <红包ID>
+    permission: briberymoney.grab
+    permission-message: 你没有权限抢红包！
+permissions:
+  briberymoney.send:
+    description: 发送红包权限
+    default: op
+  briberymoney.grab:
+    description: 抢红包权限
+    default: true
