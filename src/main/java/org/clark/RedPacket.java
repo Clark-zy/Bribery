@@ -38,22 +38,39 @@ public class RedPacket {
 
         // 添加到已领取列表
         grabbedPlayers.add(playerName);
-        remainingCount--;
 
         // 计算随机点券数
         int points;
-        if (remainingCount == 0) {
+
+        if (remainingCount == 1) {
             // 最后一个红包，拿走所有剩余点券
             points = remainingPoints;
         } else {
-            // 随机分配，保证每个红包至少1点券
-            // 随机范围：1 ~ (剩余点券 - 剩余个数 + 1)
-            int max = remainingPoints - remainingCount;
-            points = 1 + (int) (Math.random() * max);
+            // 二倍均值法：
+            // 1. 计算当前剩余金额的平均值
+            // 2. 随机范围：1 ~ 平均值*2
+            // 3. 但要保证剩余金额足够给后面的人每人至少1点券
+
+            // 当前剩余人数的平均值（包括当前玩家）
+            double avg = (double) remainingPoints / remainingCount;
+
+            // 最大可抢金额：平均值*2 和 (剩余金额-剩余人数+1) 的较小值
+            // (剩余金额-剩余人数+1) 确保后面的人每人至少能抢到1点券
+            int max = (int) Math.min(avg * 2, remainingPoints - (remainingCount - 1));
+
+            // 确保至少有1点券
+            if (max < 1) {
+                max = 1;
+            }
+
+            // 随机分配：1 ~ max
+            points = 1 + (int) (Math.random() * (max - 1));
         }
 
-        // 更新剩余点券
+        // 更新剩余点券和剩余人数
         remainingPoints -= points;
+        remainingCount--;
+
         return points;
     }
 
